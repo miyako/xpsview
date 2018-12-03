@@ -102,6 +102,20 @@ namespace xpsview
             return this.xpsViewerInstance.LoadFile();
         }
 
+        public void SetPlacement(int windowTop, int windowLeft, int windowWidth, int windowHeight, bool windowActivate)
+        {
+            if ((windowWidth !=0 ) && (windowHeight != 0))
+            {
+                this.Size = new Size(windowWidth, windowHeight);
+                this.Location = new Point(windowLeft, windowTop);
+                NativeCode.ShowWindow(this.Handle, NativeCode.SW_RESTORE);
+            }
+            if (windowActivate)
+            {
+                NativeCode.SetForegroundWindow(this.Handle);
+                NativeCode.AllowSetForegroundWindow(NativeCode.ASFW_ANY);
+            }
+        }
 
         private void FormMain_Shown(object sender, EventArgs e)
         {

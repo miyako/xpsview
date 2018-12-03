@@ -33,6 +33,13 @@ namespace xpsview
         private static Thread thrdWait = null;
         private static volatile bool thrdWaitRunning = true;
 
+        private static int windowTop = 0;
+        private static int windowLeft = 0;
+        private static int windowWidth = 0;
+        private static int windowHeight = 0;
+        private static bool windowActivate = false;
+        private static bool noProgress = false;
+
         static private void WaitWindow()
         {
             try
@@ -109,18 +116,25 @@ namespace xpsview
 
             if (stopLoading == false)
             {
-                try
+
+                if(noProgress == false)
                 {
-                    thrdWait = new Thread(new ThreadStart(WaitWindow));
-                    thrdWait.SetApartmentState(ApartmentState.STA);
-                    thrdWait.Start();
-                }
-                catch (System.Exception ex)
-                {
-                    LogFile.Error("Error while starting wait thread:\n", ex);
+                    try
+                    {
+                        thrdWait = new Thread(new ThreadStart(WaitWindow));
+                        thrdWait.SetApartmentState(ApartmentState.STA);
+                        thrdWait.Start();
+                    }
+                    catch (System.Exception ex)
+                    {
+                        LogFile.Error("Error while starting wait thread:\n", ex);
+                    }
                 }
 
                 mainFrm = new FormMain();
+
+                mainFrm.SetPlacement(windowTop, windowLeft, windowWidth, windowHeight, windowActivate);
+
                 bool run = mainFrm.LoadFileSync();
                 thrdWaitRunning = false;
                 try
@@ -217,6 +231,70 @@ namespace xpsview
                             i++;
                         }
                     }
+                    else if (arg.Equals("/WIDTH"))
+                    {
+                        if (i < args.Length - 1)
+                        {
+                            try
+                            {
+                                windowWidth = Convert.ToInt32(args[i + 1]);
+                            }
+                            catch (System.Exception ex)
+                            {
+                                LogFile.Error("exception wile converting size form string to int:", ex);
+                            }
+                            i++;
+                        }
+                    }
+                    else if (arg.Equals("/HEIGHT"))
+                    {
+                        if (i < args.Length - 1)
+                        {
+                            try
+                            {
+                                windowHeight = Convert.ToInt32(args[i + 1]);
+                            }
+                            catch (System.Exception ex)
+                            {
+                                LogFile.Error("exception wile converting size form string to int:", ex);
+                            }
+                            i++;
+                        }
+                    }
+                    else if (arg.Equals("/LEFT"))
+                    {
+                        if (i < args.Length - 1)
+                        {
+                            try
+                            {
+                                windowLeft = Convert.ToInt32(args[i + 1]);
+                            }
+                            catch (System.Exception ex)
+                            {
+                                LogFile.Error("exception wile converting size form string to int:", ex);
+                            }
+                            i++;
+                        }
+                    }
+                    else if (arg.Equals("/TOP"))
+                    {
+                        if (i < args.Length - 1)
+                        {
+                            try
+                            {
+                                windowTop = Convert.ToInt32(args[i + 1]);
+                            }
+                            catch (System.Exception ex)
+                            {
+                                LogFile.Error("exception wile converting size form string to int:", ex);
+                            }
+                            i++;
+                        }
+                    }
+                    else if (arg.Equals("/ACTIVATE"))
+                        windowActivate = true;
+                    else if (arg.Equals("/NOPROGRESS"))
+                        noProgress = true;
                     else if (arg.Equals("/TITLE"))
                     {
                         if (i < args.Length - 1)

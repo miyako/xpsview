@@ -245,7 +245,6 @@ namespace xpsview
             return result;
         }
 
-
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
         }

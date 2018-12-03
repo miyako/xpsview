@@ -55,11 +55,23 @@ namespace xpsview
         public const int SW_SHOWMINIMIZED = 2;
         public const int SW_SHOWMAXIMIZED = 3;
 
+        public const int HWND_TOP = 0;
+        public const int SWP_NOREDRAW = 0x0008;
+        public const int ASFW_ANY = -1;
+
         [DllImport("user32.dll", SetLastError = false)]
         public static extern IntPtr GetDesktopWindow();
 
         [DllImport("user32.dll")]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        public static extern bool AllowSetForegroundWindow(int dwProcessId);
+
+        [DllImport("user32.dll")]
+        public static extern bool SetWindowPos(IntPtr hWnd, int hWndInsertAfter,
+            int X, int Y, int cx, int cy, uint uFlags);
+
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern SafeFileHandle CreateFile(
